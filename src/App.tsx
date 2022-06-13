@@ -1,129 +1,46 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
-import {
-    Grid,
-    VirtualTable,
-    TableHeaderRow,
-    TableColumnReordering,
-    DragDropProvider,
-    TableColumnResizing,
-    TableFixedColumns,
-    TableSummaryRow,
-    TableTreeColumn,
-} from '@devexpress/dx-react-grid-material-ui';
-import {
-    SummaryState,
-    IntegratedSummary,
-    TreeDataState,
-    CustomTreeData, DataTypeProvider,
-} from '@devexpress/dx-react-grid';
-import {columns, rows} from "./data"
-import {Chip, Button, Checkbox} from "@mui/material";
+import DevExpressReactGrid from "./DevExpressReactGrid";
+import MuiTable from "./MuiTable";
+import {Button} from "@mui/material";
 
-
-const defaultColumnOrder = columns.map(column => column.name)
-const defaultColumnWidths = columns.map(column => {
-    return {
-        columnName: column.name,
-        width: 180
-    }
-})
-const leftColumns = columns.map(column => column.name).slice(0, 2)
-const totalSummaryItems = [
-    {columnName: 'weight', type: 'count'},
-    {columnName: 'weight', type: 'max'},
-    {columnName: 'weight', type: 'sum'},
-]
-const getChildRows = (row: any, rootRows: any) => (row ? row.children : rootRows);
-const badgeColumns = columns.map(column => column.name).slice(1, 7)
-const buttonColumns = columns.map(column => column.name).slice(7, 13)
-const checkboxColumns = ['confirmed']
-
-const handleClick = () => {
-    console.info('You clicked the Chip.');
+enum Options {
+    MUI_WITH_MUI_COMPONENTS = "MUI with MUI Components",
+    MUI_WITHOUT_MUI_COMPONENTS = "MUI without MUI Components",
+    DEV_EXPRESS_WITH_MUI_COMPONENTS = "DevExpress with MUI Components",
+    DEV_EXPRESS_WITHOUT_MUI_COMPONENTS = "DevExpress without MUI Components"
 }
-
-const ChipFormatter = ({value}: any) => (
-    <Chip
-        label={value}
-        onClick={handleClick}
-    />
-)
-
-const ButtonFormatter = ({value}: any) => (
-    <Button variant="outlined" onClick={handleClick} >
-        {value}
-    </Button>
-)
-
-const CheckboxFormatter = ({value}: any) => (
-    <Checkbox defaultChecked={value === "Yes"} onClick={handleClick} />
-)
-
-const ChipTypeProvider = (props: any) => (
-    <DataTypeProvider
-        formatterComponent={ChipFormatter}
-        {...props}
-    />
-)
-
-const ButtonTypeProvider = (props: any) => (
-    <DataTypeProvider
-        formatterComponent={ButtonFormatter}
-        {...props}
-    />
-)
-
-const CheckboxTypeProvider = (props: any) => (
-    <DataTypeProvider
-        formatterComponent={CheckboxFormatter}
-        {...props}
-    />
-)
 
 function App() {
 
-    // @ts-ignore
-    return <Grid
-        rows={rows}
-        columns={columns}
-        getRowId={row => row.id}
-    >
-        <ChipTypeProvider
-            for={badgeColumns}
-        />
-        <ButtonTypeProvider
-            for={buttonColumns}
-        />
-        <CheckboxTypeProvider
-            for={checkboxColumns}
-        />
-        <TreeDataState/>
-        <CustomTreeData
-            getChildRows={getChildRows}
-        />
-        <SummaryState
-            totalItems={totalSummaryItems}
-        />
-        <IntegratedSummary/>
+    const [framework, setFramework] = useState<Options>(Options.MUI_WITH_MUI_COMPONENTS)
 
-        <DragDropProvider/>
-        <VirtualTable
-            height={"1000px"}
-        />
-        <TableColumnReordering
-            defaultOrder={defaultColumnOrder}
-        />
-        <TableColumnResizing defaultColumnWidths={defaultColumnWidths}/>
-        <TableHeaderRow/>
-        <TableTreeColumn
-            for="id"
-        />
-        <TableSummaryRow/>
-        <TableFixedColumns
-            leftColumns={leftColumns}
-        />
-    </Grid>
+    return <>
+        <Buttons onClick={setFramework}/>
+        <Table option={framework}/>
+    </>
 }
 
 export default App;
+
+function Buttons({onClick}: {onClick: (option: Options) => void}) {
+    return <>
+        {Object.values(Options).map(option => {
+            return <Button variant="outlined" onClick={() => onClick(option)}>{option}</Button>
+        })}
+    </>
+}
+
+function Table({option}: {option: Options}) {
+    switch (option) {
+        case Options.MUI_WITH_MUI_COMPONENTS:
+            return <MuiTable withMuiComponents={true}/>
+        case Options.MUI_WITHOUT_MUI_COMPONENTS:
+            return <MuiTable withMuiComponents={false}/>
+        case Options.DEV_EXPRESS_WITH_MUI_COMPONENTS:
+            return <DevExpressReactGrid withMuiComponents={true}/>
+        case Options.DEV_EXPRESS_WITHOUT_MUI_COMPONENTS:
+            return <DevExpressReactGrid withMuiComponents={false}/>
+    }
+    return null
+}
