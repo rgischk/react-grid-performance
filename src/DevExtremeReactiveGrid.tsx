@@ -19,6 +19,7 @@ import {
 } from '@devexpress/dx-react-grid';
 import {columns, rows} from "./data"
 import {Chip, Button, Checkbox} from "@mui/material";
+import {TABLE_HEIGHT} from "./App";
 
 
 const defaultColumnOrder = columns.map(column => column.name)
@@ -30,8 +31,6 @@ const defaultColumnWidths = columns.map(column => {
 })
 const leftColumns = columns.map(column => column.name).slice(0, 2)
 const totalSummaryItems = [
-    {columnName: 'weight', type: 'count'},
-    {columnName: 'weight', type: 'max'},
     {columnName: 'weight', type: 'sum'},
 ]
 const getChildRows = (row: any, rootRows: any) => (row ? row.children : rootRows);
@@ -81,7 +80,7 @@ const CheckboxTypeProvider = (props: any) => (
     />
 )
 
-function Table({withMuiComponents}: {withMuiComponents: boolean}) {
+export function DevExtremeReactiveGrid({withMuiComponents}: {withMuiComponents: boolean}) {
 
     // @ts-ignore
     return <Grid
@@ -103,7 +102,7 @@ function Table({withMuiComponents}: {withMuiComponents: boolean}) {
 
         <DragDropProvider/>
         <VirtualTable
-            height={"1000px"}
+            height={TABLE_HEIGHT}
         />
         <TableColumnReordering
             defaultOrder={defaultColumnOrder}
@@ -119,5 +118,3 @@ function Table({withMuiComponents}: {withMuiComponents: boolean}) {
         />
     </Grid>
 }
-
-export default Table;

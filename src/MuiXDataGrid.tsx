@@ -2,6 +2,7 @@ import React from 'react';
 import {DataGridPro, GRID_TREE_DATA_GROUPING_FIELD, GridColDef, GridRenderCellParams} from '@mui/x-data-grid-pro';
 import {columns, rows} from "./data";
 import {Button, Checkbox, Chip} from "@mui/material";
+import {TABLE_HEIGHT} from "./App"
 
 const muiRows: any[] = flattenTree(rows, [])
 
@@ -11,11 +12,9 @@ const handleClick = () => {
     console.info('You clicked the Chip.');
 }
 
-
-
 const leftColumns = [GRID_TREE_DATA_GROUPING_FIELD, ...columnsWithoutId.map(column => column.name).slice(0, 1)]
 
-export default function MuiTable({withMuiComponents}: {withMuiComponents: boolean}) {
+export function MuiXDataGrid({withMuiComponents}: {withMuiComponents: boolean}) {
     const muiColumns: GridColDef[] = columnsWithoutId.map((column, index) => {
         const muiColumn: GridColDef = {
             field: column.name,
@@ -50,8 +49,9 @@ export default function MuiTable({withMuiComponents}: {withMuiComponents: boolea
     })
 
     return (
-        <div style={{height: 1000, width: '100%'}}>
+        <div style={{height: TABLE_HEIGHT, width: '100%'}}>
             <DataGridPro
+                density="comfortable"
                 treeData
                 getTreeDataPath={(row) => row.path}
                 groupingColDef={{headerName: "ID"}}

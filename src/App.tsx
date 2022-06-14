@@ -1,46 +1,58 @@
 import React, {useState} from 'react';
 import './App.css';
-import DevExpressReactGrid from "./DevExpressReactGrid";
-import MuiTable from "./MuiTable";
-import {Button} from "@mui/material";
+import {Button, ButtonGroup, FormControlLabel, FormGroup, Switch} from "@mui/material";
+
+import {MuiXDataGrid} from "./MuiXDataGrid";
+import {DevExtremeReactiveGrid} from "./DevExtremeReactiveGrid";
+import {DevExtremeXDataGrid} from "./DevExtremeXDataGrid";
+import {ReactTableVirtuoso} from "./ReactTableVirtuoso";
+
+export const TABLE_HEIGHT = 800
 
 enum Options {
-    MUI_WITH_MUI_COMPONENTS = "MUI with MUI Components",
-    MUI_WITHOUT_MUI_COMPONENTS = "MUI without MUI Components",
-    DEV_EXPRESS_WITH_MUI_COMPONENTS = "DevExpress with MUI Components",
-    DEV_EXPRESS_WITHOUT_MUI_COMPONENTS = "DevExpress without MUI Components"
+    MUI_X_DATA_GRID = "MUI X Data Grid",
+    DEV_EXTREME_REACTIVE_GRID = "DevExtreme Reactive Grid",
+    DEV_EXTREME_X_DATA_GRID = "DevExtreme X Data Grid",
+    REACT_TABLE_VIRTUOSO = "React Table with Virtuoso",
 }
 
 function App() {
 
-    const [framework, setFramework] = useState<Options>(Options.MUI_WITH_MUI_COMPONENTS)
+    const [mui, setMui] = useState(true)
+    const [framework, setFramework] = useState<Options>(Options.MUI_X_DATA_GRID)
 
     return <>
-        <Buttons onClick={setFramework}/>
-        <Table option={framework}/>
+        <Controls framework={framework} setFramework={setFramework} mui={mui} setMui={setMui}/>
+        <br />
+        <Tables option={framework} mui={mui}/>
     </>
 }
 
 export default App;
 
-function Buttons({onClick}: {onClick: (option: Options) => void}) {
+function Controls({framework, setFramework, mui, setMui}: { framework: Options, setFramework: (option: Options) => void, mui: boolean, setMui: (mui: boolean) => void }) {
     return <>
-        {Object.values(Options).map(option => {
-            return <Button variant="outlined" onClick={() => onClick(option)}>{option}</Button>
-        })}
+        <FormGroup>
+            <FormControlLabel control={<Switch defaultChecked={mui} onClick={() => setMui(!mui)}/>} label="Use MUI components"/>
+            <ButtonGroup>
+                {Object.values(Options).map(option => {
+                    return <Button variant={framework === option ? "contained" : "outlined"} onClick={() => setFramework(option)}>{option}</Button>
+                })}
+            </ButtonGroup>
+        </FormGroup>
     </>
 }
 
-function Table({option}: {option: Options}) {
+function Tables({option, mui}: { option: Options, mui: boolean }) {
     switch (option) {
-        case Options.MUI_WITH_MUI_COMPONENTS:
-            return <MuiTable withMuiComponents={true}/>
-        case Options.MUI_WITHOUT_MUI_COMPONENTS:
-            return <MuiTable withMuiComponents={false}/>
-        case Options.DEV_EXPRESS_WITH_MUI_COMPONENTS:
-            return <DevExpressReactGrid withMuiComponents={true}/>
-        case Options.DEV_EXPRESS_WITHOUT_MUI_COMPONENTS:
-            return <DevExpressReactGrid withMuiComponents={false}/>
+        case Options.MUI_X_DATA_GRID:
+            return <MuiXDataGrid withMuiComponents={mui}/>
+        case Options.DEV_EXTREME_REACTIVE_GRID:
+            return <DevExtremeReactiveGrid withMuiComponents={mui}/>
+        case Options.DEV_EXTREME_X_DATA_GRID:
+            return <DevExtremeXDataGrid withMuiComponents={mui} />
+        case Options.REACT_TABLE_VIRTUOSO:
+            return <ReactTableVirtuoso withMuiComponents={mui}/>
     }
     return null
 }
