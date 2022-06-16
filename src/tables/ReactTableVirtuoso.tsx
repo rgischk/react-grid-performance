@@ -1,6 +1,6 @@
-import {columns, rows as data} from "./data";
+import React from "react";
 import {useTable} from 'react-table'
-
+import {TableVirtuoso} from 'react-virtuoso'
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -8,11 +8,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
-import {TableVirtuoso} from 'react-virtuoso'
-import React from "react";
 import {Button, Checkbox, Chip} from "@mui/material";
-import {TABLE_HEIGHT} from "./App"
+
+import {columns, rows as data} from "../data";
+import {TABLE_HEIGHT} from "../App"
+import {TableProps} from "./TableProps";
 
 
 const handleClick = () => {
@@ -21,7 +21,7 @@ const handleClick = () => {
 
 const leftColumns = columns.map(column => column.name).slice(0, 2)
 
-export function ReactTableVirtuoso({withMuiComponents}: { withMuiComponents: boolean }) {
+export function ReactTableVirtuoso({withMuiComponents}: TableProps) {
     const reactColumns = React.useMemo(() => columns.map((column, index) => {
         const reactColumn: any = {
             Header: column.title,

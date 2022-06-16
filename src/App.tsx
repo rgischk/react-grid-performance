@@ -2,10 +2,11 @@ import React, {useState} from 'react';
 import './App.css';
 import {Button, ButtonGroup, FormControlLabel, FormGroup, Switch} from "@mui/material";
 
-import {MuiXDataGrid} from "./MuiXDataGrid";
-import {DevExtremeReactiveGrid} from "./DevExtremeReactiveGrid";
-import {DevExtremeXDataGrid} from "./DevExtremeXDataGrid";
-import {ReactTableVirtuoso} from "./ReactTableVirtuoso";
+import {MuiXDataGrid} from "./tables/MuiXDataGrid";
+import {DevExtremeReactiveGrid} from "./tables/DevExtremeReactiveGrid";
+import {DevExtremeXDataGrid} from "./tables/DevExtremeXDataGrid";
+import {ReactTableVirtuoso} from "./tables/ReactTableVirtuoso";
+import {AgGrid} from "./tables/AgGrid";
 
 export const TABLE_HEIGHT = 800
 
@@ -14,6 +15,7 @@ enum Options {
     DEV_EXTREME_REACTIVE_GRID = "DevExtreme Reactive Grid",
     DEV_EXTREME_X_DATA_GRID = "DevExtreme X Data Grid",
     REACT_TABLE_VIRTUOSO = "React Table with Virtuoso",
+    AG_GRID = "AG Grid",
 }
 
 function App() {
@@ -53,6 +55,8 @@ function Tables({option, mui}: { option: Options, mui: boolean }) {
             return <DevExtremeXDataGrid withMuiComponents={mui} />
         case Options.REACT_TABLE_VIRTUOSO:
             return <ReactTableVirtuoso withMuiComponents={mui}/>
+        case Options.AG_GRID:
+            return <AgGrid withMuiComponents={mui}/>
     }
     return null
 }

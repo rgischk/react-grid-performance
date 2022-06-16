@@ -1,19 +1,21 @@
 import React from 'react';
+import {Button, Checkbox, Chip} from "@mui/material";
 
 import "devextreme/dist/css/dx.material.blue.light.css"
-import {columns, rows} from "./data";
-import {Button, Checkbox, Chip} from "@mui/material";
-import {TABLE_HEIGHT} from "./App"
+
+import {columns, rows} from "../data";
+import {TABLE_HEIGHT} from "../App"
 
 import DataGrid, {
     Column, IColumnProps
 } from 'devextreme-react/data-grid';
+import {TableProps} from "./TableProps";
 
 const handleClick = () => {
     console.info('You clicked the Chip.');
 }
 
-export function DevExtremeXDataGrid({withMuiComponents}: {withMuiComponents: boolean}) {
+export function DevExtremeXDataGrid({withMuiComponents}: TableProps) {
 
     const columnProps: IColumnProps[] = columns.map((column, index) => {
         const dataGridColumn: IColumnProps = {

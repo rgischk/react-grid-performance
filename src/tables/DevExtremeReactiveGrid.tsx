@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import {
     Grid,
     VirtualTable,
@@ -17,9 +16,11 @@ import {
     TreeDataState,
     CustomTreeData, DataTypeProvider,
 } from '@devexpress/dx-react-grid';
-import {columns, rows} from "./data"
 import {Chip, Button, Checkbox} from "@mui/material";
-import {TABLE_HEIGHT} from "./App";
+
+import {columns, rows} from "../data"
+import {TABLE_HEIGHT} from "../App";
+import {TableProps} from "./TableProps";
 
 
 const defaultColumnOrder = columns.map(column => column.name)
@@ -80,7 +81,7 @@ const CheckboxTypeProvider = (props: any) => (
     />
 )
 
-export function DevExtremeReactiveGrid({withMuiComponents}: {withMuiComponents: boolean}) {
+export function DevExtremeReactiveGrid({withMuiComponents}: TableProps) {
 
     // @ts-ignore
     return <Grid
