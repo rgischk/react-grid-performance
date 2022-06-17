@@ -1,5 +1,5 @@
 import React from "react";
-import {useTable} from 'react-table'
+import {useTable, useExpanded} from 'react-table'
 import {TableVirtuoso} from 'react-virtuoso'
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -60,12 +60,13 @@ export function ReactTableVirtuoso({withMuiComponents}: TableProps) {
         headerGroups,
         rows,
         prepareRow,
-    } = useTable({columns: reactColumns, data})
+    } = useTable({columns: reactColumns, data, getRowId: (originalRow: any) => originalRow.id, getSubRows: (originalRow: any) => originalRow.children || []}, useExpanded)
 
     return (
         <TableVirtuoso
             style={{height: TABLE_HEIGHT.toString() + "px"}}
-            data={data}
+            totalCount={rows.length}
+            computeItemKey={(index, item: any) => item?.id}
             components={{
                 Scroller: React.forwardRef((props, ref) => <TableContainer component={Paper} {...props} ref={ref}/>),
                 Table: (props) => <Table {...props} {...getTableProps()} style={{borderCollapse: 'separate'}}/>,
@@ -96,11 +97,15 @@ export function ReactTableVirtuoso({withMuiComponents}: TableProps) {
                 ))
             }}
             itemContent={(index, originalRowObject) => {
-                const row = rows[index]
+                const row: any = rows[index]
                 prepareRow(row)
-                return row.cells.map((cell) => {
+                return row.cells.map((cell: any) => {
                     const leftColumn = leftColumns.includes(cell.column.id)
                     const columnIndex = columns.findIndex(column => column.name === cell.column.id)
+                    const expanderContent = <span {...row.getToggleRowExpandedProps()}>{row.isExpanded ? 'v ' : '> '}{cell.render('Cell')}</span>
+                    const nonExpanderContent = <>{"- "} {cell.render('Cell')}</>
+                    const normalContent = cell.render('Cell')
+                    const content = cell.column.id === "id" ? row.canExpand ? expanderContent : nonExpanderContent : normalContent
                     return <TableCell sx={{
                         maxWidth: 148,
                         minWidth: 148,
@@ -109,7 +114,7 @@ export function ReactTableVirtuoso({withMuiComponents}: TableProps) {
                         left: leftColumn ? columnIndex * 180 : undefined,
                         background: leftColumn ? "white" : undefined,
                         zIndex: 1,
-                    }} {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
+                    }} {...cell.getCellProps()}>{content}</TableCell>
                 })
             }}
         />
