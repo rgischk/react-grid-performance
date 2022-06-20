@@ -1,12 +1,15 @@
 import React, {useState} from 'react';
-import './App.css';
 import {Button, ButtonGroup, FormControlLabel, FormGroup, Switch} from "@mui/material";
+// @ts-ignore
+import FPSStats from "react-fps-stats";
+
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
+import './App.css';
 import {MuiXDataGrid} from "./tables/MuiXDataGrid";
 import {DevExtremeReactiveGrid} from "./tables/DevExtremeReactiveGrid";
 import {DevExtremeXDataGrid} from "./tables/DevExtremeXDataGrid";
@@ -29,6 +32,7 @@ function App() {
     const [framework, setFramework] = useState<Options>(Options.MUI_X_DATA_GRID)
 
     return <>
+        <FPSStats left="auto" right={0} />
         <Controls framework={framework} setFramework={setFramework} mui={mui} setMui={setMui}/>
         <br />
         <Tables option={framework} mui={mui}/>

@@ -28,6 +28,7 @@
     "devextreme-react": "~21.2.8",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-fps-stats": "^0.2.3",
     "react-scripts": "5.0.1",
     "react-table": "^7.8.0",
     "react-virtuoso": "^2.13.2",
