@@ -42,7 +42,7 @@ function CheckBoxCellRenderer(props: ICellRendererParams) {
     return <Checkbox defaultChecked={props.value === "Yes"} onClick={handleClick}/>
 }
 
-export function AgGrid({withMuiComponents}: TableProps) {
+export function AgGrid({withMuiComponents, withVirtualization}: TableProps) {
 
     const agColumns = columns.map((column, index) => {
         const agColumn: any = {
@@ -89,6 +89,8 @@ export function AgGrid({withMuiComponents}: TableProps) {
             getDataPath={data => data.path}
             groupDisplayType={"custom"}
             pinnedBottomRowData={[sumRow]}
+            rowBuffer={withVirtualization ? undefined : 300}
+            key={withVirtualization ? "AgGridWithVirtualization" : "AgGridWithoutVirtualization"}
         />
     </div>
 }

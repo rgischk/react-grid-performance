@@ -16,7 +16,11 @@ const handleClick = () => {
 
 const leftColumns = [GRID_TREE_DATA_GROUPING_FIELD, ...columnsWithoutId.map(column => column.name).slice(0, 1)]
 
-export function MuiXDataGrid({withMuiComponents}: TableProps) {
+export function MuiXDataGrid({withMuiComponents, withVirtualization}: TableProps) {
+    if (!withVirtualization) {
+        return <span>Virtualization cannot be disabled for the MUI X Data Grid!</span>
+    }
+
     const muiColumns: GridColDef[] = columnsWithoutId.map((column, index) => {
         const muiColumn: GridColDef = {
             field: column.name,

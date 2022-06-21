@@ -21,7 +21,7 @@ const handleClick = () => {
 
 const leftColumns = columns.map(column => column.name).slice(0, 2)
 
-export function ReactTableVirtuoso({withMuiComponents}: TableProps) {
+export function ReactTableVirtuoso({withMuiComponents, withVirtualization}: TableProps) {
     const reactColumns = React.useMemo(() => columns.map((column, index) => {
         const reactColumn: any = {
             Header: column.title,
@@ -67,6 +67,8 @@ export function ReactTableVirtuoso({withMuiComponents}: TableProps) {
             style={{height: TABLE_HEIGHT.toString() + "px"}}
             totalCount={rows.length}
             computeItemKey={(index, item: any) => item?.id}
+            overscan={withVirtualization ? undefined : 10000}
+            key={withVirtualization ? "ReactTableVirtuosoWithVirtualization" : "ReactTableVirtuosoWithoutVirtualization"}
             components={{
                 Scroller: React.forwardRef((props, ref) => <TableContainer component={Paper} {...props} ref={ref}/>),
                 Table: (props) => <Table {...props} {...getTableProps()} style={{borderCollapse: 'separate'}}/>,

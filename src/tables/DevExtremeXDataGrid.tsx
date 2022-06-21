@@ -15,7 +15,7 @@ const handleClick = () => {
     console.info('You clicked the Chip.');
 }
 
-export function DevExtremeXDataGrid({withMuiComponents}: TableProps) {
+export function DevExtremeXDataGrid({withMuiComponents, withVirtualization}: TableProps) {
 
     const columnProps: IColumnProps[] = columns.map((column, index) => {
         const dataGridColumn: IColumnProps = {
@@ -56,9 +56,10 @@ export function DevExtremeXDataGrid({withMuiComponents}: TableProps) {
                      allowColumnReordering={true}
                      allowColumnResizing={true}
                      paging={{enabled: false}}
-                     scrolling={{rowRenderingMode: "virtual", useNative: true}}
+                     scrolling={{rowRenderingMode: withVirtualization ? "virtual" : "standard", useNative: true}}
                      repaintChangesOnly={true}
                      renderAsync={true}
+                     key={withVirtualization ? "DevExtremeXDataGridWithVirtualization" : "DevExtremeXDataGridWithoutVirtualization"}
                      children={columnProps.map(props => <Column {...props}/>)}
     />
 }

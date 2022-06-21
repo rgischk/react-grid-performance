@@ -9,6 +9,7 @@ import {
     TableFixedColumns,
     TableSummaryRow,
     TableTreeColumn,
+    Table,
 } from '@devexpress/dx-react-grid-material-ui';
 import {
     SummaryState,
@@ -16,7 +17,7 @@ import {
     TreeDataState,
     CustomTreeData, DataTypeProvider,
 } from '@devexpress/dx-react-grid';
-import {Chip, Button, Checkbox} from "@mui/material";
+import {Chip, Button, Checkbox, Box} from "@mui/material";
 
 import {columns, rows} from "../data"
 import {TABLE_HEIGHT} from "../App";
@@ -51,13 +52,13 @@ const ChipFormatter = ({value}: any) => (
 )
 
 const ButtonFormatter = ({value}: any) => (
-    <Button variant="outlined" onClick={handleClick} >
+    <Button variant="outlined" onClick={handleClick}>
         {value}
     </Button>
 )
 
 const CheckboxFormatter = ({value}: any) => (
-    <Checkbox defaultChecked={value === "Yes"} onClick={handleClick} />
+    <Checkbox defaultChecked={value === "Yes"} onClick={handleClick}/>
 )
 
 const ChipTypeProvider = (props: any) => (
@@ -81,41 +82,45 @@ const CheckboxTypeProvider = (props: any) => (
     />
 )
 
-export function DevExtremeReactiveGrid({withMuiComponents}: TableProps) {
+export function DevExtremeReactiveGrid({withMuiComponents, withVirtualization}: TableProps) {
 
-    // @ts-ignore
-    return <Grid
-        rows={rows}
-        columns={columns}
-        getRowId={row => row.id}
-    >
-        { withMuiComponents ? <ChipTypeProvider for={badgeColumns} /> : null }
-        { withMuiComponents ? <ButtonTypeProvider for={buttonColumns} /> : null }
-        { withMuiComponents ? <CheckboxTypeProvider for={checkboxColumns} /> : null }
-        <TreeDataState/>
-        <CustomTreeData
-            getChildRows={getChildRows}
-        />
-        <SummaryState
-            totalItems={totalSummaryItems}
-        />
-        <IntegratedSummary/>
+    return <Box sx={{height: TABLE_HEIGHT, overflowY: "auto"}}>
+        {/* @ts-ignore */}
+        <Grid
+            rows={rows}
+            columns={columns}
+            getRowId={row => row.id}
+            // Ensures that the grid component is re-rendered when we switch the table implementation, which is necessary due to the grids internal state:
+            key={withVirtualization ? "devExtremeRactiveGridWithVirtualization" : "devExtremeRactiveGridWithoutVirtualization"}
+        >
+            {withMuiComponents ? <ChipTypeProvider for={badgeColumns}/> : null}
+            {withMuiComponents ? <ButtonTypeProvider for={buttonColumns}/> : null}
+            {withMuiComponents ? <CheckboxTypeProvider for={checkboxColumns}/> : null}
+            <TreeDataState/>
+            <CustomTreeData
+                getChildRows={getChildRows}
+            />
+            <SummaryState
+                totalItems={totalSummaryItems}
+            />
+            <IntegratedSummary/>
 
-        <DragDropProvider/>
-        <VirtualTable
-            height={TABLE_HEIGHT}
-        />
-        <TableColumnReordering
-            defaultOrder={defaultColumnOrder}
-        />
-        <TableColumnResizing defaultColumnWidths={defaultColumnWidths}/>
-        <TableHeaderRow/>
-        <TableTreeColumn
-            for="id"
-        />
-        <TableSummaryRow/>
-        <TableFixedColumns
-            leftColumns={leftColumns}
-        />
-    </Grid>
+            <DragDropProvider/>
+            {
+                withVirtualization ? <VirtualTable height={TABLE_HEIGHT}/> : <Table/>
+            }
+            <TableColumnReordering
+                defaultOrder={defaultColumnOrder}
+            />
+            <TableColumnResizing defaultColumnWidths={defaultColumnWidths}/>
+            <TableHeaderRow/>
+            <TableTreeColumn
+                for="id"
+            />
+            <TableSummaryRow/>
+            <TableFixedColumns
+                leftColumns={leftColumns}
+            />
+        </Grid>
+    </Box>
 }

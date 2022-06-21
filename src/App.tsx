@@ -29,22 +29,24 @@ enum Options {
 function App() {
 
     const [mui, setMui] = useState(true)
+    const [virtualization, setVirtualization] = useState(true)
     const [framework, setFramework] = useState<Options>(Options.MUI_X_DATA_GRID)
 
     return <>
         <FPSStats left="auto" right={0} />
-        <Controls framework={framework} setFramework={setFramework} mui={mui} setMui={setMui}/>
+        <Controls framework={framework} setFramework={setFramework} virtualization={virtualization} setVirtualization={setVirtualization} mui={mui} setMui={setMui}/>
         <br />
-        <Tables option={framework} mui={mui}/>
+        <Tables option={framework} mui={mui} virtualization={virtualization}/>
     </>
 }
 
 export default App;
 
-function Controls({framework, setFramework, mui, setMui}: { framework: Options, setFramework: (option: Options) => void, mui: boolean, setMui: (mui: boolean) => void }) {
+function Controls({framework, setFramework, virtualization, setVirtualization, mui, setMui}: { framework: Options, setFramework: (option: Options) => void, virtualization: boolean, setVirtualization: (virtualization: boolean) => void, mui: boolean, setMui: (mui: boolean) => void }) {
     return <>
         <FormGroup>
             <FormControlLabel control={<Switch defaultChecked={mui} onClick={() => setMui(!mui)}/>} label="Use MUI components"/>
+            <FormControlLabel control={<Switch defaultChecked={mui} onClick={() => setVirtualization(!virtualization)}/>} label="Use Virtualization"/>
             <ButtonGroup>
                 {Object.values(Options).map(option => {
                     return <Button variant={framework === option ? "contained" : "outlined"} onClick={() => setFramework(option)}>{option}</Button>
@@ -54,18 +56,18 @@ function Controls({framework, setFramework, mui, setMui}: { framework: Options, 
     </>
 }
 
-function Tables({option, mui}: { option: Options, mui: boolean }) {
+function Tables({option, virtualization, mui}: { option: Options, virtualization: boolean, mui: boolean }) {
     switch (option) {
         case Options.MUI_X_DATA_GRID:
-            return <MuiXDataGrid withMuiComponents={mui}/>
+            return <MuiXDataGrid withMuiComponents={mui} withVirtualization={virtualization}/>
         case Options.DEV_EXTREME_REACTIVE_GRID:
-            return <DevExtremeReactiveGrid withMuiComponents={mui}/>
+            return <DevExtremeReactiveGrid withMuiComponents={mui} withVirtualization={virtualization}/>
         case Options.DEV_EXTREME_X_DATA_GRID:
-            return <DevExtremeXDataGrid withMuiComponents={mui} />
+            return <DevExtremeXDataGrid withMuiComponents={mui} withVirtualization={virtualization}/>
         case Options.REACT_TABLE_VIRTUOSO:
-            return <ReactTableVirtuoso withMuiComponents={mui}/>
+            return <ReactTableVirtuoso withMuiComponents={mui} withVirtualization={virtualization}/>
         case Options.AG_GRID:
-            return <AgGrid withMuiComponents={mui}/>
+            return <AgGrid withMuiComponents={mui} withVirtualization={virtualization}/>
     }
     return null
 }
