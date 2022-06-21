@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     Grid,
     VirtualTable,
@@ -84,43 +84,51 @@ const CheckboxTypeProvider = (props: any) => (
 
 export function DevExtremeReactiveGrid({withMuiComponents, withVirtualization}: TableProps) {
 
-    return <Box sx={{height: TABLE_HEIGHT, overflowY: "auto"}}>
-        {/* @ts-ignore */}
-        <Grid
-            rows={rows}
-            columns={columns}
-            getRowId={row => row.id}
-            // Ensures that the grid component is re-rendered when we switch the table implementation, which is necessary due to the grids internal state:
-            key={withVirtualization ? "devExtremeRactiveGridWithVirtualization" : "devExtremeRactiveGridWithoutVirtualization"}
-        >
-            {withMuiComponents ? <ChipTypeProvider for={badgeColumns}/> : null}
-            {withMuiComponents ? <ButtonTypeProvider for={buttonColumns}/> : null}
-            {withMuiComponents ? <CheckboxTypeProvider for={checkboxColumns}/> : null}
-            <TreeDataState/>
-            <CustomTreeData
-                getChildRows={getChildRows}
-            />
-            <SummaryState
-                totalItems={totalSummaryItems}
-            />
-            <IntegratedSummary/>
+    const [expandedRowIds, setExpandedRowIds] = useState<(string | number)[]>([]);
 
-            <DragDropProvider/>
-            {
-                withVirtualization ? <VirtualTable height={TABLE_HEIGHT}/> : <Table/>
-            }
-            <TableColumnReordering
-                defaultOrder={defaultColumnOrder}
-            />
-            <TableColumnResizing defaultColumnWidths={defaultColumnWidths}/>
-            <TableHeaderRow/>
-            <TableTreeColumn
-                for="id"
-            />
-            <TableSummaryRow/>
-            <TableFixedColumns
-                leftColumns={leftColumns}
-            />
-        </Grid>
-    </Box>
+    return <>
+        <Button onClick={() => setExpandedRowIds(rows.map((row: any) => row.id))}>Expand all rows</Button>
+        <Box sx={{height: TABLE_HEIGHT, overflowY: "auto"}}>
+            {/* @ts-ignore */}
+            <Grid
+                rows={rows}
+                columns={columns}
+                getRowId={row => row.id}
+                // Ensures that the grid component is re-rendered when we switch the table implementation, which is necessary due to the grids internal state:
+                key={withVirtualization ? "devExtremeRactiveGridWithVirtualization" : "devExtremeRactiveGridWithoutVirtualization"}
+            >
+                {withMuiComponents ? <ChipTypeProvider for={badgeColumns}/> : null}
+                {withMuiComponents ? <ButtonTypeProvider for={buttonColumns}/> : null}
+                {withMuiComponents ? <CheckboxTypeProvider for={checkboxColumns}/> : null}
+                <TreeDataState
+                    expandedRowIds={expandedRowIds}
+                    onExpandedRowIdsChange={setExpandedRowIds}
+                />
+                <CustomTreeData
+                    getChildRows={getChildRows}
+                />
+                <SummaryState
+                    totalItems={totalSummaryItems}
+                />
+                <IntegratedSummary/>
+
+                <DragDropProvider/>
+                {
+                    withVirtualization ? <VirtualTable height={TABLE_HEIGHT}/> : <Table/>
+                }
+                <TableColumnReordering
+                    defaultOrder={defaultColumnOrder}
+                />
+                <TableColumnResizing defaultColumnWidths={defaultColumnWidths}/>
+                <TableHeaderRow/>
+                <TableTreeColumn
+                    for="id"
+                />
+                <TableSummaryRow/>
+                <TableFixedColumns
+                    leftColumns={leftColumns}
+                />
+            </Grid>
+        </Box>
+    </>
 }

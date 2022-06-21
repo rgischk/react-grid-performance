@@ -1,5 +1,5 @@
 import React from 'react';
-import {DataGridPro, GRID_TREE_DATA_GROUPING_FIELD, GridColDef, GridRenderCellParams} from '@mui/x-data-grid-pro';
+import {DataGridPro, GRID_TREE_DATA_GROUPING_FIELD, GridColDef, GridRenderCellParams, useGridApiRef} from '@mui/x-data-grid-pro';
 import {Button, Checkbox, Chip} from "@mui/material";
 
 import {columns, rows} from "../data";
@@ -17,6 +17,14 @@ const handleClick = () => {
 const leftColumns = [GRID_TREE_DATA_GROUPING_FIELD, ...columnsWithoutId.map(column => column.name).slice(0, 1)]
 
 export function MuiXDataGrid({withMuiComponents, withVirtualization}: TableProps) {
+    const apiRef = useGridApiRef()
+
+    function expandAllRows() {
+        apiRef.current.getAllRowIds().forEach(rowId => {
+            apiRef.current.setRowChildrenExpansion(rowId, true)
+        })
+    }
+
     if (!withVirtualization) {
         return <span>Virtualization cannot be disabled for the MUI X Data Grid!</span>
     }
@@ -54,9 +62,11 @@ export function MuiXDataGrid({withMuiComponents, withVirtualization}: TableProps
         return muiColumn
     })
 
-    return (
+    return <>
+        <Button onClick={() => expandAllRows()}>Expand all rows</Button>
         <div style={{height: TABLE_HEIGHT, width: '100%'}}>
             <DataGridPro
+                apiRef={apiRef}
                 density="comfortable"
                 treeData
                 getTreeDataPath={(row) => row.path}
@@ -67,7 +77,7 @@ export function MuiXDataGrid({withMuiComponents, withVirtualization}: TableProps
                 hideFooter={true}
             />
         </div>
-    )
+    </>
 }
 
 function flattenTree(tree: any[], path: any[]): any[] {

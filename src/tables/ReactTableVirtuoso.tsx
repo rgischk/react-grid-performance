@@ -21,6 +21,12 @@ const handleClick = () => {
 
 const leftColumns = columns.map(column => column.name).slice(0, 2)
 
+function MyHeader({getToggleAllRowsExpandedProps, isAllRowsExpanded}: any) {
+    return <span {...getToggleAllRowsExpandedProps()}>
+        {isAllRowsExpanded ? '👇' : '👉'}
+    </span>
+}
+
 export function ReactTableVirtuoso({withMuiComponents, withVirtualization}: TableProps) {
     const reactColumns = React.useMemo(() => columns.map((column, index) => {
         const reactColumn: any = {
@@ -28,6 +34,9 @@ export function ReactTableVirtuoso({withMuiComponents, withVirtualization}: Tabl
             accessor: column.name
         }
 
+        if (index === 0) {
+            reactColumn.Header = MyHeader
+        }
         if (withMuiComponents) {
             if (index >= 1 && index <= 6) {
                 reactColumn.Cell = ({value}: any) => (
@@ -60,7 +69,12 @@ export function ReactTableVirtuoso({withMuiComponents, withVirtualization}: Tabl
         headerGroups,
         rows,
         prepareRow,
-    } = useTable({columns: reactColumns, data, getRowId: (originalRow: any) => originalRow.id, getSubRows: (originalRow: any) => originalRow.children || []}, useExpanded)
+    } = useTable({
+        columns: reactColumns,
+        data,
+        getRowId: (originalRow: any) => originalRow.id,
+        getSubRows: (originalRow: any) => originalRow.children || []
+    }, useExpanded)
 
     return (
         <TableVirtuoso
