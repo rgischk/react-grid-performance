@@ -81,7 +81,7 @@ export function ReactTableVirtuoso({withMuiComponents, withVirtualization}: Tabl
             style={{height: TABLE_HEIGHT.toString() + "px"}}
             totalCount={rows.length}
             computeItemKey={(_, item: any) => item?.id}
-            {...withVirtualization ? {} : {overscan: 10000}}
+            {...withVirtualization ? {} : {increaseViewportBy: 25000}}
             key={withVirtualization ? "ReactTableVirtuosoWithVirtualization" : "ReactTableVirtuosoWithoutVirtualization"}
             components={{
                 Scroller: React.forwardRef((props, ref) => <TableContainer component={Paper} {...props} ref={ref}/>),
