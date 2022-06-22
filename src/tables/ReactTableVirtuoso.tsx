@@ -16,7 +16,7 @@ import {TableProps} from "./TableProps";
 
 
 const handleClick = () => {
-    console.info('You clicked the Chip.');
+    console.info('You clicked.');
 }
 
 const leftColumns = columns.map(column => column.name).slice(0, 2)

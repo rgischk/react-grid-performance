@@ -11,7 +11,7 @@ const muiRows: any[] = flattenTree(rows, [])
 const columnsWithoutId = columns.slice(1)
 
 const handleClick = () => {
-    console.info('You clicked the Chip.');
+    console.info('You clicked.');
 }
 
 const leftColumns = [GRID_TREE_DATA_GROUPING_FIELD, ...columnsWithoutId.map(column => column.name).slice(0, 1)]

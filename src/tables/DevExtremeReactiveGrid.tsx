@@ -41,7 +41,7 @@ const buttonColumns = columns.map(column => column.name).slice(7, 13)
 const checkboxColumns = ['confirmed']
 
 const handleClick = () => {
-    console.info('You clicked the Chip.');
+    console.info('You clicked.');
 }
 
 const ChipFormatter = ({value}: any) => (
