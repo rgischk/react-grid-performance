@@ -16,12 +16,30 @@ const handleClick = () => {
 
 export function DevExtremeXTreeList({withMuiComponents, withVirtualization}: TableProps) {
 
+    const treeList = useRef<TreeList>(null)
+
+    function expandAll() {
+        rows.forEach((row: any) => treeList.current?.instance.expandRow(row.id))
+    }
+
+    const [useNative, setUseNative] = useState(true)
+    const [preloadEnabled, setPreloadEnabled] = useState(true)
+    const [renderAsync, setRenderAsync] = useState(false)
+    const [renderAsyncColumns, setRenderAsyncColumns] = useState(false)
+
+    const key = "DevExtremeXTreeList"
+        + (withVirtualization ? "virtual" : "standard")
+        + (useNative ? "native" : "simulated")
+        + (preloadEnabled ? +"preloadEnabled" : "nonPreloadEnabled")
+        + (renderAsync ? "renderAsync" : "nonRenderAsync")
+
     const columnProps: IColumnProps[] = columns.map((column, index) => {
         const dataGridColumn: IColumnProps = {
             dataField: column.name,
             width: 180,
             fixed: index <= 1,
             caption: column.title,
+            renderAsync: index > 1 && renderAsyncColumns,
         }
 
         if (withMuiComponents) {
@@ -51,22 +69,6 @@ export function DevExtremeXTreeList({withMuiComponents, withVirtualization}: Tab
         return dataGridColumn
     })
 
-    const treeList = useRef<TreeList>(null)
-
-    function expandAll() {
-        rows.forEach((row: any) => treeList.current?.instance.expandRow(row.id))
-    }
-
-    const [useNative, setUseNative] = useState(true)
-    const [preloadEnabled, setPreloadEnabled] = useState(true)
-    const [renderAsync, setRenderAsync] = useState(false)
-
-    const key = "DevExtremeXTreeList"
-        + (withVirtualization ? "virtual" : "standard")
-        + (useNative ? "native" : "simulated")
-        + (preloadEnabled ? +"preloadEnabled" : "nonPreloadEnabled")
-        + (renderAsync ? "renderAsync" : "nonRenderAsync")
-
     return <>
         <Button onClick={() => expandAll()}>Expand all rows</Button>
         <FormControlLabel control={
@@ -83,6 +85,11 @@ export function DevExtremeXTreeList({withMuiComponents, withVirtualization}: Tab
                     checked={renderAsync && withVirtualization}
                     onChange={(event) => setRenderAsync(event.target.checked)}/>
         } label="Render Async"/>
+        <FormControlLabel control={
+            <Switch disabled={!withVirtualization}
+                    checked={renderAsyncColumns && withVirtualization}
+                    onChange={(event) => setRenderAsyncColumns(event.target.checked)}/>
+        } label="Render Async Columns"/>
         <TreeList id="treeList"
                   ref={treeList}
                   height={TABLE_HEIGHT}
